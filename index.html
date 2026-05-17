@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANR Cyber Space - Member Registration</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --fg-primary: #e8e8f0;
+            --fg-muted: #6b7280;
+            --accent-cyan: #00f5ff;
+            --accent-green: #00ff88;
+            --accent-purple: #bf00ff;
+            --card-bg: rgba(18, 18, 26, 0.7);
+            --glass-border: rgba(0, 245, 255, 0.15);
+            --glow-cyan: 0 0 30px rgba(0, 245, 255, 0.4);
+            --glow-green: 0 0 30px rgba(0, 255, 136, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--bg-primary);
+            color: var(--fg-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .font-cyber {
+            font-family: 'Orbitron', monospace;
+        }
+
+        /* Animated Background */
+        .cyber-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(0, 245, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(0, 255, 136, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(191, 0, 255, 0.04) 0%, transparent 60%),
+                var(--bg-primary);
+        }
+
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Grid Lines */
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image: 
+                linear-gradient(rgba(0, 245, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 245, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: perspective(500px) rotateX(60deg) translateY(0); }
+            100% { transform: perspective(500px) rotateX(60deg) translateY(50px); }
+        }
+
+        /* Glass Card */
+        .glass-card {
+            background: linear-gradient(135deg, rgba(18, 18, 26, 0.9) 0%, rgba(10, 10, 15, 0.95) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        /* Neon Text */
+        .neon-text-cyan {
+            color: var(--accent-cyan);
+            text-shadow: 
+                0 0 10px rgba(0, 245, 255, 0.8),
+                0 0 20px rgba(0, 245, 255, 0.6),
+                0 0 40px rgba(0, 245, 255, 0.4);
+        }
+
+        .neon-text-green {
+            color: var(--accent-green);
+            text-shadow: 
+                0 0 10px rgba(0, 255, 136, 0.8),
+                0 0 20px rgba(0, 255, 136, 0.6),
+                0 0 40px rgba(0, 255, 136, 0.4);
+        }
+
+        /* Cyber Input */
+        .cyber-input {
+            background: rgba(10, 10, 15, 0.8);
+            border: 1px solid rgba(0, 245, 255, 0.2);
+            color: var(--fg-primary);
+            transition: all 0.3s ease;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 16px;
+        }
+
+        .cyber-input:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+            box-shadow: 
+                0 0 20px rgba(0, 245, 255, 0.2),
+                inset 0 0 10px rgba(0, 245, 255, 0.05);
+        }
+
+        .cyber-input::placeholder {
+            color: var(--fg-muted);
+        }
+
+        /* Neon Button */
+        .neon-btn {
+            position: relative;
+            background: linear-gradient(135deg, rgba(0, 245, 255, 0.1) 0%, rgba(0, 255, 136, 0.1) 100%);
+            border: 1px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+            font-family: 'Orbitron', monospace;
+            font-weight: 600;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .neon-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .neon-btn:hover::before {
+            left: 100%;
+        }
+
+        .neon-btn:hover {
+            background: rgba(0, 245, 255, 0.2);
+            box-shadow: var(--glow-cyan);
+            transform: translateY(-2px);
+        }
+
+        .neon-btn:active {
+            transform: translateY(0);
+        }
+
+        .neon-btn-green {
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+        }
+
+        .neon-btn-green:hover {
+            background: rgba(0, 255, 136, 0.2);
+            box-shadow: var(--glow-green);
+        }
+
+        /* Social Button */
+        .social-btn {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(0, 245, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .social-btn:hover {
+            border-color: var(--accent-cyan);
+            box-shadow: var(--glow-cyan);
+            transform: translateY(-3px);
+        }
+
+        /* Notice Box */
+        .notice-box {
+            background: linear-gradient(135deg, rgba(0, 245, 255, 0.05) 0%, rgba(0, 255, 136, 0.03) 100%);
+            border-left: 3px solid var(--accent-cyan);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .notice-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent 0%, rgba(0, 245, 255, 0.05) 50%, transparent 100%);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Warning Card */
+        .warning-card {
+            background: linear-gradient(135deg, rgba(255, 50, 50, 0.1) 0%, rgba(255, 100, 50, 0.05) 100%);
+            border: 1px solid rgba(255, 100, 50, 0.3);
+            position: relative;
+        }
+
+        .warning-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ff6432, transparent);
+            animation: warningPulse 2s infinite;
+        }
+
+        @keyframes warningPulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* Voice Section */
+        .voice-btn {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 245, 255, 0.2) 0%, rgba(0, 0, 0, 0.5) 100%);
+            border: 2px solid var(--accent-cyan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .voice-btn:hover {
+            box-shadow: var(--glow-cyan);
+            transform: scale(1.05);
+        }
+
+        .voice-btn.recording {
+            border-color: #ff3232;
+            animation: pulse 1s infinite;
+        }
+
+        .voice-btn.recording svg {
+            color: #ff3232;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 50, 50, 0.4); }
+            50% { box-shadow: 0 0 40px rgba(255, 50, 50, 0.8); }
+        }
+
+        /* Face Verification */
+        .face-scanner {
+            width: 280px;
+            height: 320px;
+            border-radius: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(0, 245, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scanner-frame {
+            position: absolute;
+            inset: 20px;
+            border: 2px dashed var(--accent-cyan);
+            border-radius: 50%;
+            animation: frameRotate 10s linear infinite;
+        }
+
+        @keyframes frameRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .scan-line {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+            animation: scanMove 2s linear infinite;
+        }
+
+        @keyframes scanMove {
+            0% { top: 20%; opacity: 0; }
+            50% { opacity: 1; }
+            100% { top: 80%; opacity: 0; }
+        }
+
+        .corner {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-color: var(--accent-cyan);
+            border-style: solid;
+        }
+
+        .corner-tl { top: 10px; left: 10px; border-width: 3px 0 0 3px; border-radius: 10px 0 0 0; }
+        .corner-tr { top: 10px; right: 10px; border-width: 3px 3px 0 0; border-radius: 0 10px 0 0; }
+        .corner-bl { bottom: 10px; left: 10px; border-width: 0 0 3px 3px; border-radius: 0 0 0 10px; }
+        .corner-br { bottom: 10px; right: 10px; border-width: 0 3px 3px 0; border-radius: 0 0 10px 0; }
+
+        .face-outline {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 150px;
+            height: 180px;
+            border: 2px dashed rgba(0, 255, 136, 0.5);
+            border-radius: 50%;
+        }
+
+        /* Direction Indicator */
+        .direction-indicator {
+            position: absolute;
+            padding: 8px 16px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--accent-cyan);
+            border-radius: 8px;
+            font-family: 'Orbitron', monospace;
+            font-size: 12px;
+            color: var(--accent-cyan);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .direction-indicator.active {
+            opacity: 1;
+            animation: indicatorPulse 0.5s infinite;
+        }
+
+        @keyframes indicatorPulse {
+            0%, 100% { box-shadow: 0 0 10px rgba(0, 245, 255, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(0, 245, 255, 0.6); }
+        }
+
+        /* Checkbox */
+        .cyber-checkbox {
+            width: 24px;
+            height: 24px;
+            appearance: none;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(0, 245, 255, 0.3);
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .cyber-checkbox:checked {
+            background: rgba(0, 255, 136, 0.2);
+            border-color: var(--accent-green);
+        }
+
+        .cyber-checkbox:checked::after {
+            content: '';
+            position: absolute;
+            left: 6px;
+            top: 2px;
+            width: 6px;
+            height: 12px;
+            border: solid var(--accent-green);
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .cyber-loader {
+            width: 80px;
+            height: 80px;
+            border: 3px solid transparent;
+            border-top-color: var(--accent-cyan);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .cyber-loader::before {
+            content: '';
+            position: absolute;
+            inset: 5px;
+            border: 3px solid transparent;
+            border-top-color: var(--accent-green);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite reverse;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Success Popup */
+        .success-popup {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .success-popup.active {
+            display: flex;
+        }
+
+        .success-icon {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: rgba(0, 255, 136, 0.1);
+            border: 3px solid var(--accent-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: successPop 0.5s ease;
+        }
+
+        @keyframes successPop {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Floating Animation */
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Glow Animation */
+        .glow-animation {
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            0% { filter: drop-shadow(0 0 5px rgba(0, 245, 255, 0.5)); }
+            100% { filter: drop-shadow(0 0 20px rgba(0, 245, 255, 0.8)); }
+        }
+
+        /* Stagger Reveal */
+        .reveal-item {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 640px) {
+            .face-scanner {
+                width: 240px;
+                height: 280px;
+            }
+        }
+
+        /* Video Container */
+        .video-container {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            border-radius: 18px;
+        }
+
+        .video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Verified Badge */
+        .verified-badge {
+            background: rgba(0, 255, 136, 0.2);
+            border: 2px solid var(--accent-green);
+            padding: 10px 20px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: badgePop 0.5s ease;
+        }
+
+        @keyframes badgePop {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="cyber-bg"></div>
+    <canvas id="particles-canvas"></canvas>
+    <div class="grid-overlay"></div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="cyber-loader relative"></div>
+        <p class="font-cyber text-lg neon-text-cyan">PROCESSING DATA...</p>
+    </div>
+
+    <!-- Success Popup -->
+    <div class="success-popup" id="successPopup">
+        <div class="text-center">
+            <div class="success-icon mx-auto mb-6">
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#00ff88" stroke-width="3">
+                    <path d="M20 6L9 17l-5-5"/>
+                </svg>
+            </div>
+            <h2 class="font-cyber text-2xl neon-text-green mb-4">APPLICATION SUBMITTED</h2>
+            <p class="text-gray-400 mb-6">আপনার আবেদন সফলভাবে জমা হয়েছে।</p>
+            <p class="text-gray-500 text-sm">Team যাচাই করে শীঘ্রই যোগাযোগ করবে।</p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="relative z-10 max-w-2xl mx-auto px-4 py-8">
+        
+        <!-- Header Section -->
+        <header class="text-center mb-10 reveal-item">
+            <!-- Logo -->
+            <div class="inline-block mb-6 float-animation">
+                <div class="w-28 h-28 mx-auto rounded-full overflow-hidden border-2 border-cyan-400/50 p-1 bg-gradient-to-br from-cyan-900/30 to-transparent glow-animation">
+                    <img src="https://iili.io/BpE1rlV.jpg" alt="ANR Cyber Space Logo" class="w-full h-full object-cover rounded-full">
+                </div>
+            </div>
+            
+            <!-- Team Name -->
+            <h1 class="font-cyber text-3xl md:text-4xl neon-text-cyan mb-4 tracking-wider">
+                ANR CYBER SPACE
+            </h1>
+            
+            <div class="w-32 h-0.5 mx-auto bg-gradient-to-r from-transparent via-cyan-400 to-transparent mb-6"></div>
+            
+            <p class="font-cyber text-sm text-gray-400 tracking-widest mb-6">
+                MEMBER REGISTRATION FORM
+            </p>
+            
+            <!-- Description -->
+            <div class="glass-card rounded-xl p-6 mb-6">
+                <p class="text-gray-300 leading-relaxed text-justify">
+                    আমরা <span class="neon-text-cyan font-semibold">Ethical Hacking</span>, 
+                    <span class="neon-text-green font-semibold">Cyber Security স্পামিং</span> এবং প্রযুক্তিগত 
+                    শিক্ষার মাধ্যমে নিরাপদ ও দায়িত্বশীল ডিজিটাল দক্ষতা গড়ে তুলতে কাজ করি। 
+                    আমাদের উদ্দেশ্য শুধুমাত্র ভালো কাজ, নিরাপদ সাইবার জ্ঞান এবং 
+                    টিমওয়ার্কের মাধ্যমে উন্নতি করা।
+                </p>
+            </div>
+            
+            <!-- Privacy Notice Box -->
+            <div class="notice-box rounded-xl p-5 text-left">
+                <h3 class="font-cyber text-sm neon-text-cyan mb-4 tracking-wider">PRIVACY PROTECTION</h3>
+                <ul class="space-y-2 text-sm">
+                    <li class="flex items-start gap-2">
+                        <span class="text-green-400">🔒</span>
+                        <span class="text-gray-300">আপনার সকল তথ্য আমাদের কাছে সম্পূর্ণ নিরাপদ এবং গোপন রাখা হবে।</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-yellow-400">⚠</span>
+                        <span class="text-gray-300">আপনার তথ্য কোনো তৃতীয় পক্ষের কাছে শেয়ার করা হবে না।</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-cyan-400">✅</span>
+                        <span class="text-gray-300">শুধুমাত্র Team Verification এবং Member Management এর উদ্দেশ্যে তথ্য নেওয়া হবে।</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-purple-400">⚡</span>
+                        <span class="text-gray-300">চিন্তার কোনো কারণ নেই, আপনার Privacy সম্পূর্ণভাবে সুরক্ষিত থাকবে।</span>
+                    </li>
+                </ul>
+            </div>
+        </header>
+
+        <!-- Social Section -->
+        <section class="mb-10 reveal-item">
+            <div class="glass-card rounded-xl p-6">
+                <h3 class="font-cyber text-sm neon-text-cyan mb-4 tracking-wider text-center">OFFICIAL CHANNELS</h3>
+                
+                <div class="bg-cyan-900/20 border border-cyan-400/30 rounded-lg p-4 mb-6">
+                    <p class="text-gray-300 text-sm text-center">
+                        Form পূরণ করার আগে অবশ্যই আমাদের 
+                        <span class="text-cyan-400 font-semibold">Facebook Page Follow</span> এবং 
+                        <span class="text-green-400 font-semibold">Telegram Channel Join</span> করুন। 
+                        Team এর সকল Update, Notice এবং Important Information শুধুমাত্র 
+                        Official Channel এর মাধ্যমে দেওয়া হবে।
+                    </p>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="https://www.facebook.com/share/17dapSV6jH/" target="_blank" 
+                       class="social-btn flex-1 py-4 rounded-xl flex items-center justify-center gap-3 font-cyber text-sm">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                        </svg>
+                        <span>FACEBOOK PAGE</span>
+                    </a>
+                    
+                    <a href="https://t.me/anrcyber00" target="_blank" 
+                       class="social-btn flex-1 py-4 rounded-xl flex items-center justify-center gap-3 font-cyber text-sm">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                        </svg>
+                        <span>TELEGRAM CHANNEL</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Registration Form -->
+        <form id="registrationForm" class="space-y-6">
+            
+            <!-- Personal Information -->
+            <section class="glass-card rounded-xl p-6 reveal-item">
+                <h3 class="font-cyber text-sm neon-text-cyan mb-6 tracking-wider flex items-center gap-2">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    PERSONAL INFORMATION
+                </h3>
+                
+                <div class="space-y-5">
+                    <!-- Full Name -->
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">Full Name *</label>
+                        <input type="text" name="fullName" required
+                               class="cyber-input w-full px-4 py-3 rounded-lg"
+                               placeholder="আপনার পূর্ণ নাম লিখুন">
+                    </div>
+                    
+                    <!-- Username -->
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">Username / Nickname *</label>
+                        <input type="text" name="username" required
+                               class="cyber-input w-full px-4 py-3 rounded-lg"
+                               placeholder="আপনার ইউজারনেম বা ডাকনাম">
+                    </div>
+                    
+                    <!-- Mobile Number -->
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">Mobile Number *</label>
+                        <input type="tel" name="mobile" required
+                               class="cyber-input w-full px-4 py-3 rounded-lg"
+                               placeholder="01XXXXXXXXX">
+                    </div>
+                    
+                    <!-- WhatsApp Number -->
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">WhatsApp Number *</label>
+                        <input type="tel" name="whatsapp" required
+                               class="cyber-input w-full px-4 py-3 rounded-lg"
+                               placeholder="01XXXXXXXXX">
+                    </div>
+                    
+                    <!-- Telegram Username -->
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">Telegram Username *</label>
+                        <input type="text" name="telegram" required
+                               class="cyber-input w-full px-4 py-3 rounded-lg"
+                               placeholder="@username">
+                    </div>
+                    
+                    <!-- Facebook Profile Link -->
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">Facebook Profile Link *</label>
+                        <input type="url" name="facebook" required
+                               class="cyber-input w-full px-4 py-3 rounded-lg"
+                               placeholder="https://facebook.com/username">
+                    </div>
+                    
+                    <!-- District -->
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">District / Current Location *</label>
+                        <input type="text" name="district" required
+                               class="cyber-input w-full px-4 py-3 rounded-lg"
+                               placeholder="আপনার জেলা বা বর্তমান অবস্থান">
+                    </div>
+                    
+                    <!-- Country -->
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">Country *</label>
+                        <input type="text" name="country" value="Bangladesh" required
+                               class="cyber-input w-full px-4 py-3 rounded-lg bg-gray-900/50"
+                               readonly>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Professional Information -->
+            <section class="glass-card rounded-xl p-6 reveal-item">
+                <h3 class="font-cyber text-sm neon-text-cyan mb-6 tracking-wider flex items-center gap-2">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                    </svg>
+                    PROFESSIONAL INFORMATION
+                </h3>
+                
+                <div class="space-y-5">
+                    <!-- Current Work -->
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">আপনি বর্তমানে কী কাজ করেন? *</label>
+                        <input type="text" name="work" required
+                               class="cyber-input w-full px-4 py-3 rounded-lg"
+                               placeholder="শিক্ষার্থী / চাকরিজীবী / ফ্রিল্যান্সার ইত্যাদি">
+                    </div>
+                    
+                    <!-- Skills -->
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">আপনার Skill কী কী? *</label>
+                        <textarea name="skills" required rows="3"
+                                  class="cyber-input w-full px-4 py-3 rounded-lg resize-none"
+                                  placeholder="আপনার দক্ষতা বা অভিজ্ঞতা সম্পর্কে লিখুন"></textarea>
+                    </div>
+                    
+                    <!-- Join Reason -->
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">কেন Team এ Join হতে চান? *</label>
+                        <textarea name="reason" required rows="3"
+                                  class="cyber-input w-full px-4 py-3 rounded-lg resize-none"
+                                  placeholder="আপনার উদ্দেশ্য লিখুন"></textarea>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Important Rules -->
+            <section class="warning-card rounded-xl p-6 reveal-item">
+                <h3 class="font-cyber text-sm text-orange-400 mb-6 tracking-wider flex items-center gap-2">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                    IMPORTANT RULES
+                </h3>
+                
+                <ul class="space-y-3 text-sm">
+                    <li class="flex items-start gap-3 text-gray-300">
+                        <span class="text-orange-400 mt-0.5">⚠</span>
+                        <span>এই Team শুধুমাত্র <span class="text-cyan-400">Ethical</span> ও নিরাপদ কাজের উদ্দেশ্যে পরিচালিত হয়।</span>
+                    </li>
+                    <li class="flex items-start gap-3 text-gray-300">
+                        <span class="text-orange-400 mt-0.5">⚠</span>
+                        <span>এখানে শেখানো বা আলোচনা করা কোনো বিষয় ব্যবহার করে কেউ যদি অবৈধ, ক্ষতিকর বা অন্যের ক্ষতি হয় এমন কাজ করে তাহলে তার সম্পূর্ণ দায়ভার সেই ব্যক্তির নিজের।</span>
+                    </li>
+                    <li class="flex items-start gap-3 text-gray-300">
+                        <span class="text-orange-400 mt-0.5">⚠</span>
+                        <span>ভবিষ্যতে কোনো সমস্যার জন্য Team বা Admin দায়ী থাকবে না।</span>
+                    </li>
+                    <li class="flex items-start gap-3 text-gray-300">
+                        <span class="text-orange-400 mt-0.5">⚠</span>
+                        <span>Team এ যোগ দেওয়ার মাধ্যমে আপনি Team Rules এবং Privacy Policy মেনে নিচ্ছেন।</span>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Voice Verification -->
+            <section class="glass-card rounded-xl p-6 reveal-item">
+                <h3 class="font-cyber text-sm neon-text-cyan mb-4 tracking-wider flex items-center gap-2">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                        <line x1="12" y1="19" x2="12" y2="23"/>
+                        <line x1="8" y1="23" x2="16" y2="23"/>
+                    </svg>
+                    VOICE VERIFICATION
+                </h3>
+                
+                <div class="bg-cyan-900/20 border border-cyan-400/30 rounded-lg p-4 mb-6">
+                    <p class="text-gray-300 text-sm mb-3 font-semibold">নিচের কথাগুলো নিজের কণ্ঠে বলুন:</p>
+                    <p class="text-cyan-300 text-sm leading-relaxed italic">
+                        "আসসালামু আলাইকুম। আমি স্বেচ্ছায় ANR Cyber Space টিমে যোগ দিচ্ছি। 
+                        আমি প্রতিশ্রুতি দিচ্ছি যে আমি কোনো অবৈধ বা ক্ষতিকর কাজে জড়িত থাকবো না 
+                        এবং Ethical ও ভালো উদ্দেশ্যে Team এর সাথে কাজ করবো।"
+                    </p>
+                </div>
+                
+                <div class="flex flex-col items-center gap-6">
+                    <div class="flex items-center gap-6">
+                        <!-- Record Button -->
+                        <button type="button" id="recordBtn" class="voice-btn" title="Start Recording">
+                            <svg id="micIcon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00f5ff" stroke-width="2">
+                                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                                <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                                <line x1="12" y1="19" x2="12" y2="23"/>
+                                <line x1="8" y1="23" x2="16" y2="23"/>
+                            </svg>
+                            <svg id="stopIcon" class="hidden" width="28" height="28" viewBox="0 0 24 24" fill="#ff3232">
+                                <rect x="6" y="6" width="12" height="12" rx="2"/>
+                            </svg>
+                        </button>
+                        
+                        <!-- Play Button -->
+                        <button type="button" id="playBtn" class="voice-btn opacity-50 cursor-not-allowed" disabled title="Play Recording">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00ff88" stroke-width="2">
+                                <polygon points="5 3 19 12 5 21 5 3"/>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <div id="voiceStatus" class="text-sm text-gray-400 font-cyber">
+                        রেকর্ড করতে মাইক বাটনে ক্লিক করুন
+                    </div>
+                    
+                    <div id="voiceVerified" class="hidden">
+                        <div class="verified-badge">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00ff88" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                <polyline points="22 4 12 14.01 9 11.01"/>
+                            </svg>
+                            <span class="text-green-400 font-cyber text-sm">Voice Recorded</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Face Verification -->
+            <section class="glass-card rounded-xl p-6 reveal-item">
+                <h3 class="font-cyber text-sm neon-text-cyan mb-4 tracking-wider flex items-center gap-2">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                        <circle cx="12" cy="13" r="4"/>
+                    </svg>
+                    FACE VERIFICATION
+                </h3>
+                
+                <div class="flex flex-col items-center">
+                    <!-- Scanner -->
+                    <div class="face-scanner mb-6" id="faceScanner">
+                        <video id="cameraFeed" class="video-container hidden" autoplay playsinline muted></video>
+                        
+                        <div id="scannerOverlay">
+                            <div class="corner corner-tl"></div>
+                            <div class="corner corner-tr"></div>
+                            <div class="corner corner-bl"></div>
+                            <div class="corner corner-br"></div>
+                            <div class="scanner-frame"></div>
+                            <div class="face-outline"></div>
+                            <div class="scan-line"></div>
+                        </div>
+                        
+                        <!-- Direction Indicators -->
+                        <div id="directionUp" class="direction-indicator" style="top: 10px; left: 50%; transform: translateX(-50%);">UP</div>
+                        <div id="directionDown" class="direction-indicator" style="bottom: 10px; left: 50%; transform: translateX(-50%);">DOWN</div>
+                        <div id="directionLeft" class="direction-indicator" style="left: 10px; top: 50%; transform: translateY(-50%);">LEFT</div>
+                        <div id="directionRight" class="direction-indicator" style="right: 10px; top: 50%; transform: translateY(-50%);">RIGHT</div>
+                        
+                        <!-- Placeholder -->
+                        <div id="cameraPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center">
+                            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#00f5ff" stroke-width="1" class="mb-4 opacity-50">
+                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                                <circle cx="12" cy="13" r="4"/>
+                            </svg>
+                            <p class="text-gray-500 text-sm">ক্যামেরা চালু করুন</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Camera Controls -->
+                    <div id="cameraControls" class="flex gap-4 mb-4">
+                        <button type="button" id="startCamera" class="neon-btn px-6 py-3 rounded-lg font-cyber text-sm">
+                            START CAMERA
+                        </button>
+                    </div>
+                    
+                    <!-- Verification Status -->
+                    <div id="verificationStatus" class="text-sm text-gray-400 font-cyber text-center">
+                        ফেস ভেরিফিকেশন শুরু করতে ক্যামেরা চালু করুন
+                    </div>
+                    
+                    <!-- Face Verified Badge -->
+                    <div id="faceVerified" class="hidden mt-4">
+                        <div class="verified-badge">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00ff88" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                <polyline points="22 4 12 14.01 9 11.01"/>
+                            </svg>
+                            <span class="text-green-400 font-cyber text-sm">Face Verified</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Agreement Section -->
+            <section class="glass-card rounded-xl p-6 reveal-item">
+                <h3 class="font-cyber text-sm neon-text-cyan mb-6 tracking-wider flex items-center gap-2">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                        <polyline points="10 9 9 9 8 9"/>
+                    </svg>
+                    AGREEMENT
+                </h3>
+                
+                <div class="space-y-4">
+                    <label class="flex items-start gap-3 cursor-pointer group">
+                        <input type="checkbox" name="agree1" required class="cyber-checkbox mt-0.5 flex-shrink-0">
+                        <span class="text-gray-300 text-sm group-hover:text-white transition-colors">
+                            আমি নিশ্চিত করছি যে আমি কোনো অবৈধ, ক্ষতিকর বা মানুষের ক্ষতি হয় এমন কাজে জড়িত থাকবো না।
+                        </span>
+                    </label>
+                    
+                    <label class="flex items-start gap-3 cursor-pointer group">
+                        <input type="checkbox" name="agree2" required class="cyber-checkbox mt-0.5 flex-shrink-0">
+                        <span class="text-gray-300 text-sm group-hover:text-white transition-colors">
+                            আমি Team Rules মেনে চলবো।
+                        </span>
+                    </label>
+                    
+                    <label class="flex items-start gap-3 cursor-pointer group">
+                        <input type="checkbox" name="agree3" required class="cyber-checkbox mt-0.5 flex-shrink-0">
+                        <span class="text-gray-300 text-sm group-hover:text-white transition-colors">
+                            কোনো ব্যক্তিগত তথ্য অপব্যবহার করবো না।
+                        </span>
+                    </label>
+                    
+                    <label class="flex items-start gap-3 cursor-pointer group">
+                        <input type="checkbox" name="agree4" required class="cyber-checkbox mt-0.5 flex-shrink-0">
+                        <span class="text-gray-300 text-sm group-hover:text-white transition-colors">
+                            ভবিষ্যতে আমার কোনো ভুল কার্যকলাপের দায়ভার সম্পূর্ণ আমার নিজের হবে।
+                        </span>
+                    </label>
+                </div>
+            </section>
+
+            <!-- Submit Button -->
+            <div class="reveal-item">
+                <button type="submit" id="submitBtn" 
+                        class="neon-btn neon-btn-green w-full py-4 rounded-xl font-cyber text-base tracking-wider">
+                    SUBMIT APPLICATION
+                </button>
+            </div>
+            
+        </form>
+
+        <!-- Footer -->
+        <footer class="text-center mt-12 pb-8 reveal-item">
+            <div class="w-16 h-0.5 mx-auto bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent mb-4"></div>
+            <p class="text-gray-500 text-xs font-cyber tracking-wider">
+                ANR CYBER SPACE &copy; 2025
+            </p>
+        </footer>
+    </main>
+
+    <script>
+        // ============================================
+        // CONFIGURATION - Initialize all variables first
+        // ============================================
+        const CONFIG = {
+            botToken: '8855448355:AAHapoCXchxneyLWnLNkFwhdInYjk54Ib-c',
+            chatId: '7919883268'
+        };
+
+        // ============================================
+        // STATE VARIABLES - Initialize before use
+        // ============================================
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let audioBlob = null;
+        let audioUrl = null;
+        let recordingInterval = null;
+        let isRecording = false;
+        let cameraStream = null;
+        let faceVerificationComplete = false;
+        let voiceVerificationComplete = false;
+        let currentDirection = 0;
+        let directionInterval = null;
+
+        // ============================================
+        // DOM ELEMENTS - Get after DOM is ready
+        // ============================================
+        const particlesCanvas = document.getElementById('particles-canvas');
+        const ctx = particlesCanvas ? particlesCanvas.getContext('2d') : null;
+
+        // ============================================
+        // PARTICLES SYSTEM
+        // ============================================
+        const particles = [];
+        const particleCount = 80;
+
+        function initParticles() {
+            if (!particlesCanvas || !ctx) return;
+            
+            particlesCanvas.width = window.innerWidth;
+            particlesCanvas.height = window.innerHeight;
+            
+            particles.length = 0;
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * particlesCanvas.width,
+                    y: Math.random() * particlesCanvas.height,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    radius: Math.random() * 2 + 1,
+                    opacity: Math.random() * 0.5 + 0.2
+                });
+            }
+        }
+
+        function drawParticles() {
+            if (!ctx || !particlesCanvas) return;
+            
+            ctx.clearRect(0, 0, particlesCanvas.width, particlesCanvas.height);
+            
+            particles.forEach((p, i) => {
+                p.x += p.vx;
+                p.y += p.vy;
+                
+                if (p.x < 0 || p.x > particlesCanvas.width) p.vx *= -1;
+                if (p.y < 0 || p.y > particlesCanvas.height) p.vy *= -1;
+                
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, Math.max(0.1, p.radius), 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(0, 245, 255, ${p.opacity})`;
+                ctx.fill();
+                
+                // Connect nearby particles
+                particles.slice(i + 1).forEach(p2 => {
+                    const dx = p.x - p2.x;
+                    const dy = p.y - p2.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (dist < 120) {
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        const lineOpacity = Math.max(0, (1 - dist / 120) * 0.15);
+                        ctx.strokeStyle = `rgba(0, 245, 255, ${lineOpacity})`;
+                        ctx.stroke();
+                    }
+                });
+            });
+            
+            requestAnimationFrame(drawParticles);
+        }
+
+        // ============================================
+        // SCROLL REVEAL ANIMATION
+        // ============================================
+        function initScrollReveal() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.classList.add('visible');
+                        }, index * 100);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.reveal-item').forEach(el => observer.observe(el));
+        }
+
+        // ============================================
+        // VOICE RECORDING
+        // ============================================
+        async function initVoiceRecording() {
+            const recordBtn = document.getElementById('recordBtn');
+            const playBtn = document.getElementById('playBtn');
+            const voiceStatus = document.getElementById('voiceStatus');
+            const voiceVerified = document.getElementById('voiceVerified');
+            const micIcon = document.getElementById('micIcon');
+            const stopIcon = document.getElementById('stopIcon');
+
+            if (!recordBtn || !playBtn || !voiceStatus || !voiceVerified || !micIcon || !stopIcon) return;
+
+            recordBtn.addEventListener('click', async () => {
+                if (!isRecording) {
+                    try {
+                        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                        mediaRecorder = new MediaRecorder(stream);
+                        audioChunks = [];
+
+                        mediaRecorder.ondataavailable = (e) => {
+                            audioChunks.push(e.data);
+                        };
+
+                        mediaRecorder.onstop = () => {
+                            audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                            audioUrl = URL.createObjectURL(audioBlob);
+                            playBtn.disabled = false;
+                            playBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                            
+                            voiceVerificationComplete = true;
+                            voiceVerified.classList.remove('hidden');
+                            voiceStatus.textContent = 'Voice verification complete';
+                            
+                            stream.getTracks().forEach(track => track.stop());
+                        };
+
+                        mediaRecorder.start();
+                        isRecording = true;
+                        recordBtn.classList.add('recording');
+                        micIcon.classList.add('hidden');
+                        stopIcon.classList.remove('hidden');
+                        voiceStatus.textContent = 'Recording... Click to stop';
+
+                    } catch (err) {
+                        voiceStatus.textContent = 'Microphone access denied';
+                        console.error('Microphone error:', err);
+                    }
+                } else {
+                    if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                        mediaRecorder.stop();
+                    }
+                    isRecording = false;
+                    recordBtn.classList.remove('recording');
+                    micIcon.classList.remove('hidden');
+                    stopIcon.classList.add('hidden');
+                }
+            });
+
+            playBtn.addEventListener('click', () => {
+                if (audioUrl) {
+                    const audio = new Audio(audioUrl);
+                    audio.play();
+                    voiceStatus.textContent = 'Playing recording...';
+                    audio.onended = () => {
+                        voiceStatus.textContent = 'Voice verification complete';
+                    };
+                }
+            });
+        }
+
+        // ============================================
+        // FACE VERIFICATION SYSTEM
+        // ============================================
+        async function initFaceVerification() {
+            const startCameraBtn = document.getElementById('startCamera');
+            const cameraFeed = document.getElementById('cameraFeed');
+            const cameraPlaceholder = document.getElementById('cameraPlaceholder');
+            const scannerOverlay = document.getElementById('scannerOverlay');
+            const verificationStatus = document.getElementById('verificationStatus');
+            const faceVerified = document.getElementById('faceVerified');
+            const faceScanner = document.getElementById('faceScanner');
+
+            if (!startCameraBtn || !cameraFeed || !cameraPlaceholder || !verificationStatus || !faceVerified || !faceScanner) return;
+
+            const directions = ['Up', 'Down', 'Left', 'Right'];
+            let currentStep = 0;
+
+            startCameraBtn.addEventListener('click', async () => {
+                try {
+                    cameraStream = await navigator.mediaDevices.getUserMedia({ 
+                        video: { facingMode: 'user', width: 280, height: 320 } 
+                    });
+                    
+                    cameraFeed.srcObject = cameraStream;
+                    cameraFeed.classList.remove('hidden');
+                    cameraPlaceholder.classList.add('hidden');
+                    startCameraBtn.textContent = 'SCANNING...';
+                    startCameraBtn.disabled = true;
+                    startCameraBtn.classList.add('opacity-50');
+                    
+                    verificationStatus.textContent = 'Face detection in progress...';
+                    
+                    // Start direction verification after 2 seconds
+                    setTimeout(() => {
+                        startDirectionVerification();
+                    }, 2000);
+
+                } catch (err) {
+                    verificationStatus.textContent = 'Camera access denied';
+                    console.error('Camera error:', err);
+                }
+            });
+
+            function startDirectionVerification() {
+                currentStep = 0;
+                showDirection();
+                
+                directionInterval = setInterval(() => {
+                    currentStep++;
+                    if (currentStep >= directions.length) {
+                        clearInterval(directionInterval);
+                        completeVerification();
+                    } else {
+                        showDirection();
+                    }
+                }, 2500);
+            }
+
+            function showDirection() {
+                // Hide all directions
+                directions.forEach(dir => {
+                    const el = document.getElementById('direction' + dir);
+                    if (el) el.classList.remove('active');
+                });
+                
+                // Show current direction
+                const currentDir = directions[currentStep];
+                const currentEl = document.getElementById('direction' + currentDir);
+                if (currentEl) {
+                    currentEl.classList.add('active');
+                }
+                
+                verificationStatus.textContent = `Please turn your face ${currentDir.toUpperCase()}`;
+            }
+
+            function completeVerification() {
+                // Hide all directions
+                directions.forEach(dir => {
+                    const el = document.getElementById('direction' + dir);
+                    if (el) el.classList.remove('active');
+                });
+                
+                if (scannerOverlay) scannerOverlay.style.borderColor = '#00ff88';
+                verificationStatus.textContent = 'Face Verified Successfully!';
+                verificationStatus.style.color = '#00ff88';
+                faceVerificationComplete = true;
+                faceVerified.classList.remove('hidden');
+                
+                // Stop camera
+                if (cameraStream) {
+                    cameraStream.getTracks().forEach(track => track.stop());
+                }
+                
+                if (startCameraBtn) {
+                    startCameraBtn.textContent = 'VERIFIED';
+                    startCameraBtn.classList.remove('opacity-50');
+                    startCameraBtn.classList.add('neon-btn-green');
+                }
+            }
+        }
+
+        // ============================================
+        // FORM SUBMISSION
+        // ============================================
+        function initFormSubmission() {
+            const form = document.getElementById('registrationForm');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const successPopup = document.getElementById('successPopup');
+
+            if (!form || !loadingOverlay || !successPopup) return;
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                // Verify voice and face
+                if (!voiceVerificationComplete) {
+                    alert('Voice verification সম্পন্ন করুন।');
+                    return;
+                }
+
+                if (!faceVerificationComplete) {
+                    alert('Face verification সম্পন্ন করুন।');
+                    return;
+                }
+
+                // Show loading
+                loadingOverlay.classList.add('active');
+
+                // Collect form data
+                const formData = new FormData(form);
+                const data = {};
+                formData.forEach((value, key) => {
+                    data[key] = value;
+                });
+
+                // Prepare Telegram message
+                const message = `
+━━━━━━━━━━━━━━━
+🆕 NEW MEMBER APPLICATION
+━━━━━━━━━━━━━━━
+
+👤 Name: ${data.fullName || 'N/A'}
+
+📛 Username: ${data.username || 'N/A'}
+
+📱 Mobile: ${data.mobile || 'N/A'}
+
+💬 WhatsApp: ${data.whatsapp || 'N/A'}
+
+📱 Telegram: ${data.telegram || 'N/A'}
+
+🌐 Facebook: ${data.facebook || 'N/A'}
+
+📍 District: ${data.district || 'N/A'}
+
+🇧🇩 Country: ${data.country || 'Bangladesh'}
+
+💼 Work: ${data.work || 'N/A'}
+
+🛠 Skills: ${data.skills || 'N/A'}
+
+📝 Join Reason: ${data.reason || 'N/A'}
+
+🎤 Voice Verification: Completed
+
+✅ Face Verification: Completed
+
+━━━━━━━━━━━━━━━
+`.trim();
+
+                try {
+                    const response = await fetch(`https://api.telegram.org/bot${CONFIG.botToken}/sendMessage`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            chat_id: CONFIG.chatId,
+                            text: message,
+                            parse_mode: 'HTML'
+                        })
+                    });
+
+                    const result = await response.json();
+
+                    if (result.ok) {
+                        loadingOverlay.classList.remove('active');
+                        successPopup.classList.add('active');
+                        form.reset();
+                        
+                        // Reset verification states
+                        voiceVerificationComplete = false;
+                        faceVerificationComplete = false;
+                        
+                        const voiceVerified = document.getElementById('voiceVerified');
+                        const faceVerified = document.getElementById('faceVerified');
+                        const playBtn = document.getElementById('playBtn');
+                        const startCameraBtn = document.getElementById('startCamera');
+                        
+                        if (voiceVerified) voiceVerified.classList.add('hidden');
+                        if (faceVerified) faceVerified.classList.add('hidden');
+                        if (playBtn) {
+                            playBtn.disabled = true;
+                            playBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                        }
+                        if (startCameraBtn) {
+                            startCameraBtn.textContent = 'START CAMERA';
+                            startCameraBtn.disabled = false;
+                            startCameraBtn.classList.remove('opacity-50', 'neon-btn-green');
+                        }
+
+                    } else {
+                        throw new Error('Telegram API error');
+                    }
+
+                } catch (error) {
+                    loadingOverlay.classList.remove('active');
+                    alert('Submission failed. Please try again.');
+                    console.error('Submit error:', error);
+                }
+            });
+        }
+
+        // ============================================
+        // WINDOW RESIZE HANDLER
+        // ============================================
+        function handleResize() {
+            if (particlesCanvas) {
+                particlesCanvas.width = window.innerWidth;
+                particlesCanvas.height = window.innerHeight;
+            }
+        }
+
+        // ============================================
+        // INITIALIZE EVERYTHING
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize particles
+            initParticles();
+            drawParticles();
+            
+            // Initialize animations
+            initScrollReveal();
+            
+            // Initialize features
+            initVoiceRecording();
+            initFaceVerification();
+            initFormSubmission();
+            
+            // Resize handler
+            window.addEventListener('resize', handleResize);
+        });
+    </script>
+</body>
+</html>
